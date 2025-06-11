@@ -2,59 +2,49 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RP Karongi Student MIS</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="style.css">
+    <title>Final module test</title>
+    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
 </head>
-<body class="bg-purple-100 font-sans text-gray-800">
-    <header class="bg-purple-600 text-white py-4">
-        <h1 class="text-3xl font-bold text-center">RP Karongi Student Management System</h1>
-    </header>
-    <main class="container mx-auto p-6">
-        <section class="mb-6">
-            <h2 class="text-2xl font-semibold text-purple-700 mb-4">Add/Edit Student</h2>
-            <form id="studentForm" class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <input type="text" id="studentId" placeholder="Student ID (e.g., S123)" required class="p-2 border border-purple-300 rounded-lg focus:ring-2 focus:ring-purple-500">
-                <input type="text" id="fullName" placeholder="Full Name" required class="p-2 border border-purple-300 rounded-lg focus:ring-2 focus:ring-purple-500">
-                <select id="department" required class="p-2 border border-purple-300 rounded-lg focus:ring-2 focus:ring-purple-500">
-                    <option value="" disabled selected>Select Department</option>
-                    <option value="ICT">ICT</option>
-                    <option value="Horticulture">Horticulture</option>
-                    <option value="EEE">EEE</option>
-                    <option value="Telephone">Telephone</option>
-                </select>
-                <input type="number" id="level" placeholder="Level (1-5)" min="1" max="5" required class="p-2 border border-purple-300 rounded-lg focus:ring-2 focus:ring-purple-500">
-                <input type="email" id="email" placeholder="Email" required class="p-2 border border-purple-300 rounded-lg focus:ring-2 focus:ring-purple-500">
-                <button type="submit" id="addBtn" class="col-span-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 focus:ring-2 focus:ring-blue-500">
-                    Add Student
-                </button>
-            </form>
-        </section>
-        <section class="mb-6">
-            <input type="text" id="search" placeholder="Search by ID, name, department, or email" class="w-full p-2 border border-purple-300 rounded-lg focus:ring-2 focus:ring-purple-500 mb-4">
-        </section>
-        <section>
-            <table id="studentTable" class="w-full border border-purple-300 bg-white rounded-lg overflow-x-auto">
-                <thead class="bg-purple-200">
-                    <tr>
-                        <th class="p-2 border-r border-purple-300">Student ID</th>
-                        <th class="p-2 border-r border-purple-300">Full Name</th>
-                        <th class="p-2 border-r border-purple-300">Department</th>
-                        <th class="p-2 border-r border-purple-300">Level</th>
-                        <th class="p-2 border-r border-purple-300">Email</th>
-                        <th class="p-2">Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="studentBody"></tbody>
-            </table>
-        </section>
-        <div class="mt-6 flex gap-4">
-            <button id="exportBtn" class="bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600">Export JSON</button>
-            <input type="file" id="importFile" accept=".json" class="hidden">
-            <button id="importBtn" class="bg-yellow-500 text-white py-2 px-4 rounded-lg hover:bg-yellow-600">Import JSON</button>
+<body>
+
+
+    <div class="container">
+        <h1>RP Karongi Student Management System</h1>
+        <div class="input-container">
+            <input type="text" placeholder="Name" id="name">
+            <input type="email" placeholder="Email" id="email">
+            <input type="text" placeholder="GPA" id="grade">
+            <input type="number" placeholder="Age" id="age">
+            <input type="text" placeholder="Degree" id="degree">
         </div>
-    </main>
-    <script src="script.js"></script>
+
+        <button class="button" type="submit" id="submit" onclick="addStudent()">Add Student</button>
+    
+        <input class="search" type="text" id="search" onkeyup="search()" placeholder="Search By Name, email or Degree">
+
+        <table class="table" id="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Student Name</th>
+                    <th>Email</th>
+                    <th>Age</th>
+                    <th>GPA</th>
+                    <th>Degree</th>
+                </tr>
+            </thead>
+    
+            <tbody id="tbody">
+            </tbody>
+        </table>
+    </div>
+
+    <script src="./script.js"></script>
 </body>
 </html>
