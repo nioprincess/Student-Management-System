@@ -1,3 +1,7 @@
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getDatabase, ref, child, get, push, update, remove, onValue } from "firebase/database";
+
 // Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyD8fLaWZvNiC58YxlN2CyHKt0MUgWyM-zc",
@@ -7,13 +11,15 @@ const firebaseConfig = {
   storageBucket: "student-ms-532c9.firebasestorage.app",
   messagingSenderId: "826040686479",
   appId: "1:826040686479:web:0a18acff49f7a44fa99dfa",
-  measurementId: "G-C5QHLSPGSV"
+  measurementId: "G-C5QHLSPGSV" // Note: If you're not using Analytics, you might not need this or the import
 };
 
 // Initialize Firebase
-firebase.initializeApp(firebaseConfig);
-const database = firebase.database();
-const studentsRef = database.ref('students');
+const app = initializeApp(firebaseConfig);
+// Get Realtime Database service instance
+const database = getDatabase(app); // Pass the initialized app to getDatabase
+// Create a reference to the 'students' node
+const studentsRef = ref(database, 'students');
 
 let editId = null;
 
@@ -36,7 +42,8 @@ const validateEmail = (email) => {
 };
 
 async function isUniqueStudentId(studentId, excludeId) {
-    const snapshot = await studentsRef.once('value');
+    // Use get(studentsRef) to fetch the data once
+    const snapshot = await get(studentsRef);
     const students = snapshot.val() || {};
     return !Object.keys(students).some(id => students[id].studentId === studentId && id !== excludeId);
 }
@@ -45,17 +52,21 @@ function displayStudents(data = []) {
     studentBody.innerHTML = '';
     data.forEach(({ id, student }) => {
         const row = document.createElement('tr');
-        row.innerHTML = `
+        // Using `id` (the Firebase key) here, make sure your HTML handles this,
+        // the original code was using student.studentId for display which is fine.
+        // Let's stick to using the actual data for display.
+         row.innerHTML = `
             <td>${student.studentId}</td>
             <td>${student.fullName}</td>
             <td>${student.department}</td>
             <td>${student.level}</td>
             <td>${student.email}</td>
             <td>
-                <a onclick="editStudent('${id}')">Edit</a>
-                <a onclick="deleteStudent('${id}')" class="ml-2">Delete</a>
+                <a href="#" onclick="editStudent('${id}'); return false;">Edit</a>
+                <a href="#" onclick="deleteStudent('${id}'); return false;" class="ml-2">Delete</a>
             </td>
         `;
+        // Added href="#" and return false to links to prevent page reload
         studentBody.appendChild(row);
     });
 }
@@ -92,12 +103,14 @@ async function addStudent(e) {
 
     try {
         if (editId) {
-            await studentsRef.child(editId).update(student);
+            // Use update() with child() to update a specific student
+            await update(child(studentsRef, editId), student);
             alert('Student updated');
             editId = null;
             addBtn.textContent = 'Add Student';
         } else {
-            await studentsRef.push(student);
+            // Use push() to add a new student with an auto-generated key
+            await push(studentsRef, student);
             alert('Student added');
         }
         studentForm.reset();
@@ -108,7 +121,8 @@ async function addStudent(e) {
 
 async function editStudent(id) {
     try {
-        const snapshot = await studentsRef.child(id).once('value');
+        // Use get() with child() to fetch a single student's data once
+        const snapshot = await get(child(studentsRef, id));
         const student = snapshot.val();
         if (!student) {
             return alert('Student not found');
@@ -118,7 +132,7 @@ async function editStudent(id) {
         departmentInput.value = student.department;
         levelInput.value = student.level;
         emailInput.value = student.email;
-        editId = id;
+        editId = id; // Store the Firebase key
         addBtn.textContent = 'Update Student';
     } catch (error) {
         alert('Error loading student: ' + error.message);
@@ -128,7 +142,8 @@ async function editStudent(id) {
 async function deleteStudent(id) {
     if (confirm('Are you sure you want to delete this student?')) {
         try {
-            await studentsRef.child(id).remove();
+            // Use remove() with child() to delete a specific student
+            await remove(child(studentsRef, id));
             alert('Student deleted');
         } catch (error) {
             alert('Error deleting student: ' + error.message);
@@ -149,9 +164,10 @@ function searchStudents(students) {
 
 async function exportData() {
     try {
-        const snapshot = await studentsRef.once('value');
+        // Use get() to fetch all student data once
+        const snapshot = await get(studentsRef);
         const students = snapshot.val() || {};
-        const data = Object.values(students);
+        const data = Object.values(students); // Export just the student objects, not the Firebase keys
         const dataStr = JSON.stringify(data, null, 2);
         const blob = new Blob([dataStr], { type: 'application/json' });
         const url = URL.createObjectURL(blob);
@@ -172,12 +188,16 @@ async function importData(e) {
         reader.onload = async function(event) {
             try {
                 const imported = JSON.parse(event.target.result);
-                if (Array.isArray(imported) && imported.every(s => s.studentId && s.fullName && s.department && s.level && s.email)) {
-                    const uniqueIds = new Set(imported.map(s => s.studentId));
+                // Basic validation for imported data format
+                if (Array.isArray(imported) && imported.every(s => s && typeof s === 'object' && s.studentId && s.fullName && s.department && s.level && s.email)) {
+                     const uniqueIds = new Set(imported.map(s => s.studentId));
                     if (uniqueIds.size === imported.length) {
-                        await studentsRef.set({});
+                        // Optionally clear existing data before importing
+                        // await remove(studentsRef); // uncomment this line if you want to replace existing data
+
+                        // Import each student by pushing them
                         for (const student of imported) {
-                            await studentsRef.push(student);
+                            await push(studentsRef, student);
                         }
                         alert('Data imported successfully');
                     } else {
@@ -188,28 +208,49 @@ async function importData(e) {
                 }
             } catch (err) {
                 alert('Error importing data: ' + err.message);
+            } finally {
+                // Reset the file input to allow importing the same file again if needed
+                importFile.value = '';
             }
         };
         reader.readAsText(file);
     }
 }
 
-// Real-time listener
-studentsRef.on('value', snapshot => {
-    const studentsData = snapshot.val() || {};
+// Real-time listener using onValue()
+onValue(studentsRef, (snapshot) => {
+    // snapshot contains all the data at the 'students' node
+    const studentsData = snapshot.val() || {}; // Get the data as a JavaScript object
+    // Convert the object into an array where each item is { id: firebaseKey, student: studentObject }
     const studentsArray = Object.entries(studentsData).map(([id, student]) => ({ id, student }));
-    displayStudents(studentsArray);
-    searchStudents(studentsArray);
+
+    // Display and search (search will filter the data received by the listener)
+    searchStudents(studentsArray); // Apply search filter to the data received
 });
 
 studentForm.addEventListener('submit', addStudent);
+
+// Updated search listener to filter the currently displayed data
+// (Assuming the onValue listener has populated the displayStudents/searchStudents)
+// If you want search to trigger a *new* fetch each time, revert this part to using get()
 searchInput.addEventListener('input', () => {
-    studentsRef.once('value').then(snapshot => {
+    // The onValue listener already fetches the data and calls searchStudents
+    // So we don't need to fetch it again here.
+    // We just need to re-apply the search filter to the current data.
+    // However, the current searchStudents function is called with a potentially filtered array,
+    // so we need access to the full, unfiltered array from the listener.
+    // Let's modify the listener to store the full array globally or pass it around.
+
+    // A simpler approach for now, if the real-time list is small, is to refetch:
+     get(studentsRef).then(snapshot => {
         const studentsData = snapshot.val() || {};
         const studentsArray = Object.entries(studentsData).map(([id, student]) => ({ id, student }));
-        searchStudents(studentsArray);
+        searchStudents(studentsArray); // Apply search filter to the newly fetched data
+    }).catch(error => {
+        console.error("Error fetching students for search:", error);
     });
 });
+
 exportBtn.addEventListener('click', exportData);
 importBtn.addEventListener('click', () => importFile.click());
 importFile.addEventListener('change', importData);
