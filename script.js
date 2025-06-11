@@ -1,7 +1,4 @@
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-// Firebase configuration (replace with your config)
+// Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyD8fLaWZvNiC58YxlN2CyHKt0MUgWyM-zc",
   authDomain: "student-ms-532c9.firebaseapp.com",
@@ -12,6 +9,7 @@ const firebaseConfig = {
   appId: "1:826040686479:web:0a18acff49f7a44fa99dfa",
   measurementId: "G-C5QHLSPGSV"
 };
+
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 const database = firebase.database();
@@ -90,7 +88,7 @@ async function addStudent(e) {
         return;
     }
 
-    const student = { studentId, fullName, department, level, fullName };
+    const student = { studentId, fullName, department, level, email };
 
     try {
         if (editId) {
@@ -104,7 +102,7 @@ async function addStudent(e) {
         }
         studentForm.reset();
     } catch (error) {
-        alert('Error saving student: ' + e.message);
+        alert('Error saving student: ' + error.message);
     }
 }
 
@@ -112,7 +110,7 @@ async function editStudent(id) {
     try {
         const snapshot = await studentsRef.child(id).once('value');
         const student = snapshot.val();
-        if (student) {
+        if (!student) {
             return alert('Student not found');
         }
         studentIdInput.value = student.studentId;
