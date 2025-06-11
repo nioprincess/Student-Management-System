@@ -1,93 +1,104 @@
-body{
-    background-color: black;
-    color: white;
+body {
+    background-color: #121212;
+    color: #f5f5f5;
     margin: 0;
     font-family: 'Inter', sans-serif;
 }
-*{
+
+* {
     box-sizing: border-box;
 }
-a:hover{
+
+a:hover {
     cursor: pointer;
 }
 
-.container{
-    margin: 20px 50px;
+.container {
+    margin: 2rem auto;
+    max-width: 1200px;
+    padding: 0 1.5rem;
 }
 
-.input-container{
-   
+.input-container {
     display: grid;
-    grid-template-columns: repeat(3,auto);
-    gap:30px;
-    padding: 0;
-
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
 }
 
-.degree{
+.degree {
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
     align-items: center;
-    gap: 10px;
+    gap: 0.5rem;
 }
 
-.input-container input{
-    background-color: black;
-    border: 1px solid white;
+.input-container input {
+    background-color: #1e1e1e;
+    border: 1px solid #444;
+    border-radius: 8px;
     height: 40px;
-    padding-left: 10px;
-    width: auto;
-    color: white;
+    padding: 0 10px;
+    color: #fff;
+    width: 100%;
 }
 
-.icons{
-    margin-top: 10px;
+.icons {
+    margin-top: 1rem;
     display: flex;
     justify-content: center;
-    gap:10px
+    gap: 1rem;
 }
-.table{
-    border: 1px solid white;
-    width:100%;
+
+.table {
+    border: 1px solid #444;
+    width: 100%;
     border-spacing: 0;
     min-height: 200px;
     overflow-x: auto;
+    border-radius: 8px;
+    background-color: #1a1a1a;
 }
 
-th,td{
+th, td {
     text-align: center;
-}
-th{
-    border-bottom: 1px solid white;
-    border-right: 1px solid white;
-    padding: 10px;
-}
-td{
-    padding: 10px;
-    border-right: 1px solid white;
-}
-tbody{
-    height: auto;
+    padding: 0.75rem;
+    border-right: 1px solid #333;
 }
 
-.search{
-    width:100%;
-    background-color: black;
-    border: 1px solid white;
+th {
+    border-bottom: 1px solid #333;
+    background-color: #222;
+    color: #ccc;
+}
+
+td {
+    color: #eee;
+}
+
+.search {
+    width: 100%;
+    background-color: #1e1e1e;
+    border: 1px solid #444;
+    border-radius: 8px;
     height: 40px;
-    padding: 0;
-    margin-bottom: 30px;
-    margin-top: 20px;
-    width:100%;
     padding-left: 10px;
-    color: white;
+    margin: 1rem 0;
+    color: #fff;
 }
-
 
 .button {
     height: 40px;
-    width: 400px;
-    margin: 20px;
-    margin-left: 0;
-    margin-top: 30px;
+    width: 100%;
+    max-width: 400px;
+    margin-top: 2rem;
+    background-color: #333;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.button:hover {
+    background-color: #555;
 }
