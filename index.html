@@ -2,49 +2,60 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Final module test</title>
-    <link rel="stylesheet" href="./style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
+    <title>RP Karongi Student MIS</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
-
-
-    <div class="container">
+    <header>
         <h1>RP Karongi Student Management System</h1>
-        <div class="input-container">
-            <input type="text" placeholder="Name" id="name">
-            <input type="email" placeholder="Email" id="email">
-            <input type="text" placeholder="Option" id="grade">
-            <input type="number" placeholder="Age" id="age">
-            <input type="text" placeholder="Degree" id="degree">
+    </header>
+    <main class="container">
+        <section>
+            <h2>Add/Edit Student</h2>
+            <form id="studentForm" class="input-container">
+                <input type="text" id="studentId" placeholder="Student ID (e.g., S123)" required>
+                <input type="text" id="fullName" placeholder="Full Name" required>
+                <select id="department" required>
+                    <option value="" disabled selected>Select Department</option>
+                    <option value="ICT">ICT</option>
+                    <option value="Horticulture">Horticulture</option>
+                    <option value="EEE">EEE</option>
+                    <option value="Telephone">Telephone</option>
+                </select>
+                <input type="number" id="level" placeholder="Level (1-5)" min="1" max="5" required>
+                <input type="email" id="email" placeholder="Email" required>
+                <button type="submit" id="addBtn" class="button">Add Student</button>
+            </form>
+        </section>
+        <section>
+            <input type="text" id="search" class="search" placeholder="Search by ID, name, department, or email">
+        </section>
+        <section>
+            <table id="studentTable" class="table">
+                <thead>
+                    <tr>
+                        <th>Student ID</th>
+                        <th>Full Name</th>
+                        <th>Department</th>
+                        <th>Level</th>
+                        <th>Email</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="studentBody"></tbody>
+            </table>
+        </section>
+        <div class="icons">
+            <button id="exportBtn">Export JSON</button>
+            <input type="file" id="importFile" accept=".json" hidden>
+            <button id="importBtn">Import JSON</button>
         </div>
-
-        <button class="button" type="submit" id="submit" onclick="addStudent()">Add Student</button>
-    
-        <input class="search" type="text" id="search" onkeyup="search()" placeholder="Search By Name, email or Degree">
-
-        <table class="table" id="table">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Student Name</th>
-                    <th>Email</th>
-                    <th>Age</th>
-                    <th>GPA</th>
-                    <th>Degree</th>
-                </tr>
-            </thead>
-    
-            <tbody id="tbody">
-            </tbody>
-        </table>
-    </div>
-
-    <script src="./script.js"></script>
+    </main>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-database.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
