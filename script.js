@@ -1,15 +1,14 @@
-
 // Firebase configuration (replace with your config)
 const firebaseConfig = {
-  apiKey: "AIzaSyD8fLaWZvNiC58YxlN2CyHKt0MUgWyM-zc",
-  authDomain: "student-ms-532c9.firebaseapp.com",
-  databaseURL: "https://student-ms-532c9-default-rtdb.firebaseio.com",
-  projectId: "student-ms-532c9",
-  storageBucket: "student-ms-532c9.firebasestorage.app",
-  messagingSenderId: "826040686479",
-  appId: "1:826040686479:web:0a18acff49f7a44fa99dfa",
-  measurementId: "G-C5QHLSPGSV"
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+    databaseURL: "https://YOUR_PROJECT_ID-default-rtdb.firebaseio.com",
+    projectId: "YOUR_PROJECT_ID",
+    storageBucket: "YOUR_PROJECT_ID.appspot.com",
+    messagingSenderId: "YOUR_SENDER_ID",
+    appId: "YOUR_APP_ID"
 };
+
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 const database = firebase.database();
